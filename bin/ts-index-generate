@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+index=$1
+if [ -z $index ]; then
+  echo "Please provide the index file path"
+  exit 1
+fi
+
+directory=$(dirname $index)
+echo >> $index
+for file in $directory/*.ts; do
+  filename=$(basename $file)
+  if [ $filename == 'index.ts' ]; then
+    continue
+  fi
+  echo "export * from './${filename%.ts}';" >> $index
+done
+

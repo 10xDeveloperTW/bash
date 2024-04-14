@@ -1,0 +1,30 @@
+#!/opt/homebrew/bin/bash
+
+set -e
+
+# check whether the current directory is a git repository
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+  echo "Current directory is not a git repository"
+  exit 1
+fi
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+prefix=$(echo "$branch" | sed 's/\(.*\)\/.*/\1/')
+name=$(echo "$branch" | sed 's/.*\/\(.*\)/\1/')
+
+declare -A mapping
+mapping["feature"]="feat"
+mapping["refactor"]="refactor"
+mapping["fix"]="fix"
+mapping["chore"]="chore"
+mapping["docs"]="docs"
+
+if [[ ! -n "${mapping[$prefix]}" ]]; then
+  echo "Invalid prefix: $prefix"
+  exit 1
+fi
+type=${mapping[$prefix]}
+message=$(echo "$name" | sed 's/-/ /g')
+commit_message="$type: $message"
+
+git commit -m "$commit_message"

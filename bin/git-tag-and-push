@@ -1,0 +1,9 @@
+#!/bin/bash
+
+tag=$1
+
+git tag -d $tag
+git push --delete origin $tag
+
+git tag $tag -f
+git push origin $tag -f
