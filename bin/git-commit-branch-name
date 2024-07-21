@@ -8,6 +8,21 @@ if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
   exit 1
 fi
 
+args=""
+
+# 解析命令行选项
+while getopts "f" opt; do
+  case ${opt} in
+    f )
+      args="--no-verify"
+      ;;
+    \? )
+      echo "Usage: git-commit-branch-name [-f]"
+      exit 1
+      ;;
+  esac
+done
+
 branch=$(git rev-parse --abbrev-ref HEAD)
 prefix=$(echo "$branch" | sed 's/\(.*\)\/.*/\1/')
 name=$(echo "$branch" | sed 's/.*\/\(.*\)/\1/')
@@ -27,4 +42,4 @@ type=${mapping[$prefix]}
 message=$(echo "$name" | sed 's/-/ /g')
 commit_message="$type: $message"
 
-git commit -m "$commit_message"
+git commit -m "$commit_message" $args
