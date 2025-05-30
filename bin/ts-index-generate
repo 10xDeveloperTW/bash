@@ -10,9 +10,9 @@ fi
 
 directory=$(dirname $index)
 echo >> $index
-for file in $directory/*.ts; do
+for file in $directory/*.{ts,tsx}; do
   filename=$(basename $file)
-  if [ $filename == 'index.ts' ]; then
+  if [ $filename == 'index.ts' ] || [ $filename == 'index.tsx' ]; then
     continue
   fi
   echo "export * from './${filename%.ts}';" >> $index
