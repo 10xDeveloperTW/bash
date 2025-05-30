@@ -33,6 +33,8 @@ mapping["refactor"]="refactor"
 mapping["fix"]="fix"
 mapping["chore"]="chore"
 mapping["docs"]="docs"
+mapping["perf"]="perf"
+mapping["test"]="test"
 
 if [[ ! -n "${mapping[$prefix]}" ]]; then
   echo "Invalid prefix: $prefix"
