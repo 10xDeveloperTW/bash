@@ -36,12 +36,24 @@ mapping["docs"]="docs"
 mapping["perf"]="perf"
 mapping["test"]="test"
 
+declare -A replacements=(
+  ["api"]="API"
+  ["id"]="ID"
+  ["db"]="database"
+)
+
 if [[ ! -n "${mapping[$prefix]}" ]]; then
   echo "Invalid prefix: $prefix"
   exit 1
 fi
+
 type=${mapping[$prefix]}
 message=$(echo "$name" | sed 's/-/ /g')
+for word in "${!replacements[@]}"; do
+  replacement="${replacements[$word]}"
+  message=$(echo "$message" | perl -pe "s/\\b$word\\b/$replacement/g")
+done
+
 commit_message="$type: $message"
 
 git commit -m "$commit_message" $args
